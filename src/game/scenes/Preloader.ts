@@ -10,7 +10,6 @@ export class Preloader extends Scene
     init ()
     {
         //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
 
         //  A simple progress bar. This is the outline of the bar.
         this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
@@ -47,7 +46,15 @@ export class Preloader extends Scene
                 frameHeight: 128,
             }
         )
+        
+        this.load.spritesheet('spritesheet', 'spritesheet.png', {
+            frameWidth: 21,
+            frameHeight: 21,
+            margin: 3,
+            spacing: 2
+        })
 
+        this.createTilemaps();
     }
     
     private createAnimations() {
@@ -64,6 +71,15 @@ export class Preloader extends Scene
             frameRate: 10,
             repeat: -1,
         });
+    }
+    
+    private createTilemaps()
+    {
+        this.load.setPath('assets/JSON');
+
+        this.load.tilemapTiledJSON("tile1", 'tile1.json');
+        this.load.tilemapTiledJSON("tile2", 'tile2.json');
+        this.load.tilemapTiledJSON("tile3", 'tile3.json');
     }
     
     create ()

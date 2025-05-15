@@ -20,6 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
         MainGame,
         GameOver
     ],
+    pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {

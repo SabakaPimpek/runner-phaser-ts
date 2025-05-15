@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import Player from '../gameObjects/characters/player';
+import Tilemap from '../mapGenerator/Tilemap';
 
 export class Game extends Scene
 {
@@ -24,7 +25,7 @@ export class Game extends Scene
             this.player.jump();
         })
 
-        this.scene
+        new Tilemap(this, 3);
     }
 
     update()
