@@ -30,16 +30,48 @@ export class Preloader extends Scene
     preload ()
     {
         //  Load the assets for the game - Replace with your own assets
-        this.load.setPath('assets');
+        this.load.setPath('assets/images');
 
-        this.load.image('logo', 'logo.png');
+        this.load.image('sky', 'sky.png');
+
+        this.load.spritesheet("character-run", 'character-run.png',
+            {
+                frameWidth: 128,
+                frameHeight: 128,
+            }
+        )
+
+        this.load.spritesheet("character-jump", 'character-jump.png',
+            {
+                frameWidth: 128,
+                frameHeight: 128,
+            }
+        )
+
     }
-
+    
+    private createAnimations() {
+        this.anims.create({
+            key: 'character-run',
+            frames: this.anims.generateFrameNumbers('character-run', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1,
+        });
+        
+        this.anims.create({
+            key: 'character-jump',
+            frames: this.anims.generateFrameNumbers('character-jump', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1,
+        });
+    }
+    
     create ()
     {
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
-
+        this.createAnimations();
+        
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('MainMenu');
     }
