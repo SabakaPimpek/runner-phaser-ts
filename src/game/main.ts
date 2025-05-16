@@ -13,6 +13,9 @@ const config: Phaser.Types.Core.GameConfig = {
     height: 720,
     parent: 'game-container',
     backgroundColor: '#028af8',
+    fps: {
+        target: 60
+    },
     scene: [
         Boot,
         Preloader,
@@ -28,7 +31,7 @@ const config: Phaser.Types.Core.GameConfig = {
             gravity: {
                 y: 1200,
                 x: 0
-            }
+            },
         }
     },
 };

@@ -1,59 +1,83 @@
-type PlayerState = 'running' | 'jumping';
+import StateMachine from "../../stateMachine/StateMachine";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene;
-    jumpCounter: number = 0;
-    state: PlayerState = 'running';    
+    private stateMachine: StateMachine = new StateMachine();
+    private canJump: boolean = true;
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'character-run');
 
         this.scene = scene;
 
-        // Dodaj gracza do sceny i fizyki
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
         this.setCollideWorldBounds(true);
 
         this.play("character-run", true);
+      
+        if(this.body?.halfWidth) this.setSize(this.body?.halfWidth, this.body?.height);
+
+        this.createStates();
+        this.stateMachine.setState('running');
+        this.setDepth(2);
     }
 
-    public update() {
-        if(this.body?.velocity.y === 0 && this.body?.touching.down) {
-            this.changeState('running');
-        }
-        else {
-            this.changeState('jumping');
-        }
+    private createStates() {
+		this.stateMachine.addState('running', {
+			onEnter: () => this.play('character-run', true),
+            onUpdate: () => {
+                if(!this.body?.blocked.down)
+                {
+                    this.stateMachine.setState('jumping');
+                }
+
+                if(this.scene.input.activePointer.isDown)
+                {
+                    this.canJump = false;
+                    this.jump();
+                    this.scene.time.delayedCall(200, () => {
+                        this.canJump = true;   
+                    })
+                    this.stateMachine.setState('jumping');
+                }
+
+            }
+		});
+
+		this.stateMachine.addState('jumping', {
+            onEnter: () => this.play('character-jump'),
+            onUpdate: () => {
+
+                if(this.scene.input.activePointer.isDown && this.canJump)
+                {
+                    this.jump();
+                    this.stateMachine.setState('doubleJumping');
+                }
+                this.checkIfOnGround();
+            }
+		});
+
+
+		this.stateMachine.addState('doubleJumping', {
+			onEnter: () => this.play('character-jump'), // lub 'character-double-jump'
+            onUpdate: () => {
+                this.checkIfOnGround();
+            }
+		});
+	}   
+    
+    public update(dt: number) {
+        this.stateMachine.update(dt);
+          this.setVelocityX(400);
     }
 
-    public changeState(newState: PlayerState)
-    {
-        if(newState === this.state) return;
-
-        this.state = newState;
-
-        switch(newState) {
-            case 'jumping':
-                this.play('character-jump');
-                break;
-            case 'running':
-                this.play('character-run');
-                break;
-        }
-    }
-
-
-
-    public jump(): void {
-        if (this.body?.touching.down) {
-            this.jumpCounter = 0;
-        }
-
-        if (this.jumpCounter >= 2) return;
-
-
+    private jump() {
         this.setVelocityY(-700);
-        this.jumpCounter++;
+    }
+
+    private checkIfOnGround()
+    {
+        if(this.body?.blocked.down) this.stateMachine.setState('running');
     }
 }
