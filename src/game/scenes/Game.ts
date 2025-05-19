@@ -2,7 +2,6 @@ import { Scene } from 'phaser';
 import Player from '../gameObjects/characters/Player';
 import TilemapManager from '../mapGenerator/TilemapManager';
 import UIContainer from '../ui/UiContainer';
-import Coin from '../gameObjects/Items/coin';
 
 export class Game extends Scene
 {
@@ -37,14 +36,12 @@ export class Game extends Scene
         })
 
         new UIContainer(this);
-
-        const coin = new Coin(this, 200, 200);
-
     }
 
     update(dt: number)
     {
         this.player.update(dt);
+        this.tilemapManager.update();
     }
 
     playThemeMusic()
