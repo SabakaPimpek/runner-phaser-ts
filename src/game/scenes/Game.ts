@@ -1,7 +1,13 @@
 import { Scene } from 'phaser';
 import Player from '../gameObjects/characters/Player';
-import TilemapManager from '../mapGenerator/TilemapManager';
+import TilemapManager from '../gameObjects/mapGenerator/TilemapManager';
 import UIContainer from '../ui/UiContainer';
+import Coin from '../gameObjects/Items/coin';
+import Spike from '../gameObjects/Items/spike';
+
+type GameStats = {
+    score: number
+}
 
 export class Game extends Scene
 {
@@ -10,6 +16,10 @@ export class Game extends Scene
     msg_text : Phaser.GameObjects.Text;
     player: Player;
     tilemapManager: TilemapManager;
+    uiContainer: UIContainer;
+    stats: GameStats = {
+        score: 0
+    }
 
     constructor ()
     {
@@ -35,7 +45,23 @@ export class Game extends Scene
             if(e.botLayer) this.physics.add.collider(this.player, e.botLayer);
         })
 
-        new UIContainer(this);
+        this.uiContainer = new UIContainer(this);
+
+        this.tilemapManager.getAllObjects().forEach(e => {
+            if(e instanceof Coin)
+            {
+                this.physics.add.overlap(this.player, e, () => {
+                    e.collect();
+                    this.stats.score += 50;
+                })
+            }
+            else if(e instanceof Spike)
+            {
+                this.physics.add.overlap(this.player, e, () => {
+                    this.player.hurt()
+                })
+            }
+        })
     }
 
     update(dt: number)

@@ -4,6 +4,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene;
     private stateMachine: StateMachine = new StateMachine();
     private canJump: boolean = true;
+    private isInvincible: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'character-run');
 
@@ -80,4 +81,31 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.body?.blocked.down) this.stateMachine.setState('running');
     }
     
+    public hurt(): boolean {
+    if (this.isInvincible) return false;
+
+        this.scene.sound.play('player-hurt');
+
+        this.isInvincible = true;
+
+        this.scene.cameras.main.shake(100, 0.01);
+
+        const flashTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 0,
+            duration: 100,
+            yoyo: true,
+            repeat: 4, // 5 błysków = 1 sekunda (5 * 200ms)
+            onComplete: () => {
+                this.alpha = 1;
+            }
+        });
+
+        this.scene.time.delayedCall(1000, () => {
+            this.isInvincible = false;
+            this.alpha = 1;
+        });
+
+        return true;
+    }
 }

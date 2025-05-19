@@ -1,5 +1,5 @@
-import Coin from "../gameObjects/Items/coin";
-import Spike from '../gameObjects/Items/spike';
+import Coin from "../Items/coin";
+import Spike from '../Items/spike';
 
 export default class Tilemap {
     private scene: Phaser.Scene

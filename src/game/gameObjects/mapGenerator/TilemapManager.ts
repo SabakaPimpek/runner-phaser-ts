@@ -93,4 +93,15 @@ export default class TilemapManager {
 
         this.activeTilemaps.push(newTilemap);
     }
+
+    public getAllObjects(): Phaser.GameObjects.GameObject[] {
+        const allObjects: Phaser.GameObjects.GameObject[] = [];
+
+        for (const tilemap of this.tilemaps) {
+            const groupObjects = tilemap.objectGroup.getChildren();
+            allObjects.push(...groupObjects);
+        }
+
+        return allObjects;
+    }
 }

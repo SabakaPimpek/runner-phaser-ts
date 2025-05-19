@@ -17,9 +17,13 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
     }
 
     public collect(): void {
-        if (this.scene.sound.get('coin-pickup')) {
-            this.scene.sound.play('coin-pickup');
-        }
+        
+        if(!this.active) return;
+
+        this.scene.sound.play('coin-pickup', {
+            volume: 0.3
+        }); 
+    
         this.setActive(false);
         this.setVisible(false);
     }
