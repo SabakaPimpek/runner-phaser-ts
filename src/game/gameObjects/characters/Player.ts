@@ -14,8 +14,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true);
 
-        this.play("character-run", true);
-      
         if(this.body?.halfWidth) this.setSize(this.body?.halfWidth, this.body?.height);
 
         this.createStates();
@@ -32,7 +30,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.stateMachine.setState('jumping');
                 }
 
-                if(this.scene.input.activePointer.isDown)
+                if(this.scene.input.activePointer.isDown && this.canJump)
                 {
                     this.canJump = false;
                     this.jump();
@@ -69,15 +67,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
     public update(dt: number) {
         this.stateMachine.update(dt);
-          this.setVelocityX(400);
+        this.setVelocityX(300);
     }
 
     private jump() {
         this.setVelocityY(-700);
+        this.scene.sound.play('player-jump');
     }
 
     private checkIfOnGround()
     {
         if(this.body?.blocked.down) this.stateMachine.setState('running');
     }
+    
 }

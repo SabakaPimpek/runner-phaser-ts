@@ -54,7 +54,8 @@ export class Preloader extends Scene
             spacing: 2
         })
 
-        this.createTilemaps();
+        this.loadTilemaps();
+        this.loadMusic();
     }
     
     private createAnimations() {
@@ -73,13 +74,24 @@ export class Preloader extends Scene
         });
     }
     
-    private createTilemaps()
+    private loadTilemaps()
     {
         this.load.setPath('assets/JSON');
 
         this.load.tilemapTiledJSON("tile1", 'tile1.json');
         this.load.tilemapTiledJSON("tile2", 'tile2.json');
         this.load.tilemapTiledJSON("tile3", 'tile3.json');
+    }
+
+    private loadMusic()
+    {
+        this.load.setPath('assets/sound')
+
+        this.load.audio('gameTheme', 'gameTheme.mp3');
+        this.load.audio('menuTheme', 'menuTheme.vaw');
+        this.load.audio('player-hurt', 'player-hurt.ogg');
+        this.load.audio('coin-pickup', 'coin-pickup.wav');
+        this.load.audio('player-jump', 'player-jump.wav');
     }
     
     create ()
