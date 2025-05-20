@@ -20,6 +20,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.createStates();
         this.stateMachine.setState('running');
         this.setDepth(2);
+        this.setMaxVelocity(300, 900);
     }
 
     private createStates() {

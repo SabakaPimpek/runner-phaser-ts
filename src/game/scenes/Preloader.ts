@@ -9,20 +9,36 @@ export class Preloader extends Scene
 
     init ()
     {
+        let { width, height } = this.sys.game.canvas;
         //  We loaded this image in our Boot Scene, so we can display it here
 
-        //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+         const loadBarBg = this.add.image(width / 2, height / 2, 'load-bar-bg').setScale(0.5);
 
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
+        // Rzeczywista szerokość i wysokość tła po skalowaniu
+        const bgDisplayWidth = loadBarBg.width * loadBarBg.scaleX;
+        const bgDisplayHeight = loadBarBg.height * loadBarBg.scaleY;
 
-        //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
+        // Lewa krawędź tła
+        const barStartX = loadBarBg.x - bgDisplayWidth / 2;
+
+        // Pasek ładowania
+        const loadBar = this.add.image(barStartX + 7, height / 2, 'load-bar-content')
+            .setOrigin(0, 0.5);
+
+        const loadText = this.add.image(width/2, height/2 - 50, 'load-bar-text').setScale(0.75);
+
+        // Skalujemy pasek ładowania tak, by dopasować jego rozmiar do tła
+        const scaleX = (bgDisplayWidth - 10) / loadBar.width; // zostawiamy np. 10px margines z każdej strony
+        const scaleY = (bgDisplayHeight / loadBar.height) * 0.8;
+
+        loadBar.setScale(scaleX, scaleY);
+
+        // Obsługa ładowania
         this.load.on('progress', (progress: number) => {
+            const fullWidth = loadBar.width; // używamy surowej, nieskalowanej szerokości tekstury
+            const fullHeight = loadBar.height;
 
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (460 * progress);
-
+            loadBar.setCrop(0, 0, fullWidth * progress, fullHeight);
         });
     }
 
@@ -32,6 +48,17 @@ export class Preloader extends Scene
         this.load.setPath('assets/images');
 
         this.load.image('sky', 'sky.png');
+        this.load.image('menu-background', 'ui/menu/bg.png');
+        this.load.image('logo', 'ui/menu/logo.png');
+        
+        //GameOver screen
+        this.load.image('gameOver-bg', 'ui/you_lose/bg.png');
+        this.load.image('gameOver-header', 'ui/you_lose/header.png');   
+        this.load.image('gameOver-table', 'ui/you_lose/table.png');
+        
+        this.load.image('btn-play', 'ui/menu/play.png');
+        this.load.image('btn-menu', 'ui/menu/menu.png');
+        this.load.image('btn-restart', 'ui/menu/restart.png');
 
         this.load.spritesheet("character-run", 'character-run.png',
             {

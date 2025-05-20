@@ -73,4 +73,10 @@ export default class HeartsManager {
             this.updateTexture();
         }
     }
+
+    public setHearts(value: number)
+    {
+        this.currentLives = value;
+        this.updateTexture();
+    }
 }

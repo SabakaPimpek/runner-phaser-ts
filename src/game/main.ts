@@ -12,7 +12,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 1280,
     height: 720,
     parent: 'game-container',
-    backgroundColor: '#028af8',
+    backgroundColor: '#6eced6',
     fps: {
         target: 60
     },

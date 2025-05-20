@@ -16,9 +16,9 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
         this.setGravity(-gravity.x, -gravity.y);
     }
 
-    public collect(): void {
+    public collect(): boolean {
         
-        if(!this.active) return;
+        if(!this.active) return false;
 
         this.scene.sound.play('coin-pickup', {
             volume: 0.3
@@ -26,6 +26,8 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
     
         this.setActive(false);
         this.setVisible(false);
+
+        return true;
     }
 
     public setActive(value: boolean): this {

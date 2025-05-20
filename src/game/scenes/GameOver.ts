@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { GameStats } from './Game';
 
 export class GameOver extends Scene
 {
@@ -11,8 +12,14 @@ export class GameOver extends Scene
         super('GameOver');
     }
 
+    init(data: { gameData: GameStats; }) {
+        // Odbierz dane przekazane z poprzedniej sceny
+        console.log(data.gameData.score);
+    }
+
     create ()
     {
+        this.sound.stopAll();
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xff0000);
 
