@@ -3,8 +3,8 @@ import StateMachine from "../../stateMachine/StateMachine";
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene;
     private stateMachine: StateMachine = new StateMachine();
-    private canJump: boolean = true;
     private isInvincible: boolean = false;
+    private pointerJustDown: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'character-run');
 
@@ -15,30 +15,34 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true);
 
+        this.setSize(this.width * 0.75, this.height)
+
         if(this.body?.halfWidth) this.setSize(this.body?.halfWidth, this.body?.height);
 
         this.createStates();
         this.stateMachine.setState('running');
         this.setDepth(2);
         this.setMaxVelocity(300, 900);
+
+        scene.input.on('pointerdown', () => {
+            this.pointerJustDown = true;
+        });
     }
 
     private createStates() {
 		this.stateMachine.addState('running', {
 			onEnter: () => this.play('character-run', true),
             onUpdate: () => {
+                this.setVelocityX(300);
+
                 if(!this.body?.blocked.down)
                 {
                     this.stateMachine.setState('jumping');
                 }
 
-                if(this.scene.input.activePointer.isDown && this.canJump)
+                if(this.pointerJustDown)
                 {
-                    this.canJump = false;
                     this.jump();
-                    this.scene.time.delayedCall(200, () => {
-                        this.canJump = true;   
-                    })
                     this.stateMachine.setState('jumping');
                 }
 
@@ -48,8 +52,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.stateMachine.addState('jumping', {
             onEnter: () => this.play('character-jump'),
             onUpdate: () => {
+                this.setVelocityX(300);
 
-                if(this.scene.input.activePointer.isDown && this.canJump)
+                if(this.pointerJustDown)
                 {
                     this.jump();
                     this.stateMachine.setState('doubleJumping');
@@ -62,14 +67,26 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.stateMachine.addState('doubleJumping', {
 			onEnter: () => this.play('character-jump'), // lub 'character-double-jump'
             onUpdate: () => {
+                this.setVelocityX(300);
+
                 this.checkIfOnGround();
             }
 		});
+
+        this.stateMachine.addState('dead', {
+            onEnter: () => {
+                this.setActive(false).setVisible(false).setMaxVelocity(0, 0);
+                
+            },
+            onUpdate: () => {
+                this.isInvincible = true;
+            }
+        })
 	}   
     
     public update(dt: number) {
         this.stateMachine.update(dt);
-        this.setVelocityX(300);
+        this.pointerJustDown = false;
     }
 
     private jump() {
@@ -107,6 +124,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.alpha = 1;
         });
 
+        this.stateMachine.setState('jumping');
+
         return true;
+    }
+
+    public death()
+    {
+        this.stateMachine.setState('dead');
     }
 }

@@ -27,6 +27,7 @@ export class Game extends Scene
 
     create ()
     {
+        this.sound.pauseAll();
         let { width, height } = this.sys.game.canvas;
         this.background = this.add.image(width/2, height/2, 'sky').setScale(0.75);
         this.background.setScrollFactor(0);
@@ -50,8 +51,6 @@ export class Game extends Scene
         })
 
         this.uiContainer = new UIContainer(this);
-
-        this.scene.pause();
 
         this.createObjectColliders();
     }
@@ -119,7 +118,7 @@ export class Game extends Scene
 
     gameOver()
     {
-        const gameData = this.stats;
-        this.scene.start('GameOver', {gameData});
+        this.player.death();
+        this.uiContainer.gameOverScreen.turnOn(this.stats.score);
     }
 }

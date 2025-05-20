@@ -56,9 +56,9 @@ export class Preloader extends Scene
         this.load.image('gameOver-header', 'ui/you_lose/header.png');   
         this.load.image('gameOver-table', 'ui/you_lose/table.png');
         
-        this.load.image('btn-play', 'ui/menu/play.png');
-        this.load.image('btn-menu', 'ui/menu/menu.png');
-        this.load.image('btn-restart', 'ui/menu/restart.png');
+        this.load.image('btn-play', 'ui/btn/play.png');
+        this.load.image('btn-menu', 'ui/btn/menu.png');
+        this.load.image('btn-restart', 'ui/btn/restart.png');
 
         this.load.spritesheet("character-run", 'character-run.png',
             {

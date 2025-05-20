@@ -25,7 +25,7 @@ export class MainMenu extends Scene
             this.scene.start('Game');
         })
 
-        this.startButton.setScale(0.25);
+        this.startButton.body.setScale(0.65);
 
         // this.title = this.add.text(512, 460, 'Main Menu', {
         //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',

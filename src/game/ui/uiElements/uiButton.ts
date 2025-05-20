@@ -1,5 +1,5 @@
 export default class UIButton {
-    private button: Phaser.GameObjects.Sprite;
+    public body: Phaser.GameObjects.Sprite;
 
     constructor(
         scene: Phaser.Scene,
@@ -9,22 +9,17 @@ export default class UIButton {
         callback: () => void
     ) {
         // Tworzymy przycisk
-        this.button = scene.add.sprite(x, y, texture).setInteractive({ useHandCursor: true });
+        this.body = scene.add.sprite(x, y, texture).setInteractive({ useHandCursor: true }).setDepth(50);
 
         // Obsługa kliknięcia
-        this.button.on('pointerdown', () => {
+        this.body.on('pointerdown', () => {
             callback();
         });
     }
 
     // Opcjonalnie: metoda do ukrywania przycisku
     setVisible(visible: boolean) {
-        this.button.setVisible(visible);
-        this.button.setActive(visible);
-    }
-
-    public setScale(scale: number)
-    {
-        this.button.setScale(scale);
+        this.body.setVisible(visible);
+        this.body.setActive(visible);
     }
 }
