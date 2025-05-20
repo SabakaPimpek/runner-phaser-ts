@@ -2,12 +2,13 @@ import { Scene } from 'phaser';
 import Player from '../gameObjects/characters/Player';
 import TilemapManager from '../gameObjects/mapGenerator/TilemapManager';
 import UIContainer from '../ui/UiContainer';
-import Coin from '../gameObjects/Items/coin';
-import Spike from '../gameObjects/Items/spike';
+import Coin from '../gameObjects/Items/Coin';
+import Spike from '../gameObjects/Items/Spike';
 
 export type GameStats = {
     score: number;
     hearts: number;
+    isGameOver: boolean
 }
 
 export class Game extends Scene
@@ -37,13 +38,14 @@ export class Game extends Scene
 
         this.stats = {
             hearts: 3,
-            score: 0
+            score: 0,
+            isGameOver: false
         }
 
         this.tilemapManager = new TilemapManager(this, 0, 0, 3);
 
         this.physics.world.setBounds(0, -height, Infinity, height*2);
-        this.cameras.main.startFollow(this.player, false, 1, 0, -300, 0);
+        this.cameras.main.startFollow(this.player, true, 1, 0, -300, 0);
         this.cameras.main.setBounds(0, -height, Infinity, height *2);
 
         this.tilemapManager.tilemaps.forEach(e => {
@@ -60,6 +62,8 @@ export class Game extends Scene
         this.player.update(dt);
         this.tilemapManager.update();
         this.checkIfPlayerIsOutsideMap();
+
+        console.log("Współrrzędne kamery: ", this.cameras.main.scrollX, this.cameras.main.scrollY)
     }
 
     playThemeMusic()
@@ -95,7 +99,7 @@ export class Game extends Scene
 
     handlePlayerHurt()
     {
-        if(this.player.hurt())
+        if(!this.stats.isGameOver && this.player.hurt())
         {
             this.stats.hearts--;
             this.uiContainer.heartsManager.setHearts(this.stats.hearts);
@@ -106,9 +110,6 @@ export class Game extends Scene
 
     checkIfPlayerIsOutsideMap()
     {
-
-        console.log(this.player.y + this.player.height, this.physics.world.bounds.bottom);
-
         // Przykład: jeśli gracz wypadnie poniżej widoku kamery
         if (this.player.y + this.player.height > this.physics.world.bounds.bottom) {
             this.handlePlayerHurt();
@@ -118,6 +119,7 @@ export class Game extends Scene
 
     gameOver()
     {
+        this.stats.isGameOver = true;
         this.player.death();
         this.uiContainer.gameOverScreen.turnOn(this.stats.score);
     }

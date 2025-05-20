@@ -1,5 +1,5 @@
-import Coin from "../Items/coin";
-import Spike from '../Items/spike';
+import Coin from "../Items/Coin";
+import Spike from "../Items/Spike";
 
 export default class Tilemap {
     private scene: Phaser.Scene
@@ -62,8 +62,6 @@ export default class Tilemap {
     {
         const objectLayer = this.tilemap.getObjectLayer('Objects');
         
-        console.log(objectLayer);
-
         if(!objectLayer) return;
 
         objectLayer.objects.forEach(objData => {
