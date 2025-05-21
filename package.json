@@ -1,7 +1,7 @@
 {
     "name": "runner-phaser",
     "description": "Endless running game",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scripts": {
         "dev": "node log.js dev & vite --config vite/config.dev.mjs",
         "build": "node log.js build & vite build --config vite/config.prod.mjs",

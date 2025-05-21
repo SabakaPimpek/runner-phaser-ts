@@ -74,7 +74,6 @@ export default class TilemapManager {
         const tilemap = this.activeTilemaps.shift();
         if (tilemap) {
             tilemap.setActive(false);
-            tilemap.setX(-9000); // przenieś ją poza ekran
         }
     }
 

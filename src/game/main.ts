@@ -8,7 +8,7 @@ import { Preloader } from './scenes/Preloader';
 //  Find out more information about the Game Config at:
 //  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const config: Phaser.Types.Core.GameConfig = {
-    type: Phaser.CANVAS,
+    type: Phaser.AUTO,
     width: 1280,
     height: 720,
     parent: 'game-container',
@@ -36,6 +36,10 @@ const config: Phaser.Types.Core.GameConfig = {
             fps: 60
         },
     },
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+    }
 
 };
 
